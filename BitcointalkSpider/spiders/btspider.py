@@ -1,10 +1,10 @@
 import scrapy
-from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors import LinkExtractor
-from BitcointalkSpider.items import User, Post, Thread
-from scrapy import log
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
+from BitcointalkSpider.items import User, Thread
+import logging
 
-class btspider(scrapy.contrib.spiders.CrawlSpider):
+class btspider(scrapy.spiders.CrawlSpider):
 
 	name = "btspider"
 	allowed_domains = ["bitcointalk.org"]
