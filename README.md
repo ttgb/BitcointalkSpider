@@ -137,10 +137,10 @@ FoOTOo Lab 2014-2015
 
 ##爬虫部分介绍
 ###btthreadspider.py
-- `class btthreadspider(scrapy.contrib.spiders.Spider)`：完全继承自scrapy自带爬虫类(额外知识，可能需要了解一下xpath) spider
+- `class btthreadspider(scrapy.spiders.Spider)`：完全继承自scrapy自带爬虫类(额外知识，可能需要了解一下xpath) spider
 主要负责thread的简单提取，和抓取内容的简单处理。将抓取到的内容以scrapy.item 返回。
 ###btuserspider.py
-- `class btuserspider(scrapy.contrib.spiders.Spider)`：完全继承自scrapy自带爬虫类(额外知识，可能需要了解一下xpath) spider
+- `class btuserspider(scrapy.spiders.Spider)`：完全继承自scrapy自带爬虫类(额外知识，可能需要了解一下xpath) spider
 主要负责user的简单提取，和抓取内容的简单处理。将抓取到的内容以scrapy.item 返回
 
 
