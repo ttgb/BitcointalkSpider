@@ -3,16 +3,16 @@ import ConfigParser
 import re
 import urllib2
 import scrapy
-from scrapy.spider import Spider
-from scrapy.contrib.linkextractors import LinkExtractor
-from scrapy import log
+from scrapy.spiders import Spider
+from scrapy.linkextractors import LinkExtractor
 from scrapy.http import Request
 from ..items import User, Thread
 from BitcointalkSpider.util import incAttr
+import logging
 
 
 
-class btuserspider(scrapy.spider.Spider):
+class btuserspider(scrapy.spiders.Spider):
     name = "btuserspider"
     allowed_domains = ["bitcointalk.org"]
 
@@ -117,13 +117,13 @@ class btuserspider(scrapy.spider.Spider):
                     continue
                 else:
                         incAttr(self.stats, 'ignoreUserAttrNum')
-                        log.msg('%s do not extract info in %s!' % response.body, response.url, level = log.ERROR)
+                        logging.error('%s do not extract info in %s!' % response.body, response.url)
             else:
                 incAttr(self.stats, 'ignoreUserNum')
-                log.msg('%s do not extract info in %s!' % response.body, response.url, level = log.ERROR)
+                logging.error('%s do not extract info in %s!' % response.body, response.url)
         if dict(user).values() == [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]:
             incAttr(self.stats, 'ignoreUserNum')
-            log.msg('%s do not extract info in %s!' % response.body, response.url, level = log.ERROR)
+            logging.error('%s do not extract info in %s!' % response.body, response.url)
             return         
         return user
 

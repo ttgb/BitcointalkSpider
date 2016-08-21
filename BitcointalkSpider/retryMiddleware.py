@@ -1,9 +1,9 @@
 import re
 import time
 import os
+import logging
 from datetime import datetime
 from scrapy.contrib.downloadermiddleware.retry import RetryMiddleware
-from scrapy import log
 from scrapy import signals
 from twisted.internet import defer
 from twisted.internet.error import TimeoutError, DNSLookupError, \
@@ -39,7 +39,7 @@ class MyRetryMiddleware(RetryMiddleware):
         try:
             self.file = open(self.path, 'a+')
         except:
-            log.msg("Can not open retryUrl file in %s" %self.path, level = log.ERROR)
+            logging.error("Can not open retryUrl file in %s" %self.path)
             self.file = None
     
     def spider_closed(self):       
@@ -67,14 +67,12 @@ class MyRetryMiddleware(RetryMiddleware):
             if url and re.match("https://bitcointalk\.org/index\.php\?board=\d+\.\d+$", url)\
             else self.max_retry_times
         if retries <= maxtimes:
-            log.msg(format="Retrying %(request)s (failed %(retries)d times): %(reason)s",
-                    level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
+            logging.debug(format="Retrying %(request)s (failed %(retries)d times): %(reason)s", spider=spider, request=request, retries=retries, reason=reason)
             retryreq = request.copy()
             retryreq.meta['retry_times'] = retries
             retryreq.dont_filter = True
             retryreq.priority = request.priority + self.priority_adjust
             return retryreq
         else:
-            log.msg(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
-                    level=log.ERROR, spider=spider, request=request, retries=retries, reason=reason)
+            logging.error(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s", spider=spider, request=request, retries=retries, reason=reason)
             self.file.write(url + '\n')

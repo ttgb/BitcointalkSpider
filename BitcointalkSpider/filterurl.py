@@ -3,9 +3,9 @@ import ConfigParser
 import re
 import os
 import json
+import logging
 from scrapy.dupefilter import RFPDupeFilter
 from scrapy import signals
-from scrapy import log
 from .settings import SPIDER_PRO_DIR
 class FilterurlExtension(object):
     """Filter url that later than the last spider starting, and update config.cfg"""
@@ -32,7 +32,7 @@ class FilterurlExtension(object):
             self.time = datetime.today()
         self.stats.set_value('last_start_time', self.time)
         self.config.set('SPIDER', 'start_time', datetime.today().isoformat())
-        log.msg(self.time.isoformat() + "Read config finish.") 
+        logging.info(self.time.isoformat() + "Read config finish.") 
     
     # def spider_response(self, response, request, spider):
     #     if spider.name == 'btthreadspider':
@@ -53,7 +53,7 @@ class FilterurlExtension(object):
             self.config.set('SPIDER', 'finish_time', datetime.today().isoformat())
             self.config.write(open(os.path.join(SPIDER_PRO_DIR, 'config.cfg'), 'w'))
             self.configfile.close()
-            log.msg(self.time.isoformat() + 'Write config finish')
+            logging.info(self.time.isoformat() + 'Write config finish')
             info = dict(self.stats.get_stats())
             info.update(self.stats.spider_stats)
             statinfo = str(info)
@@ -61,7 +61,7 @@ class FilterurlExtension(object):
             f.write(statinfo)
             f.close()
         except:
-            log.msg(self.time.isoformat() + 'Write config fail!')
+            logging.info(self.time.isoformat() + 'Write config fail!')
 
 class SaveRequestSeen(RFPDupeFilter):
     def request_seen(self, request):

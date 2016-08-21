@@ -3,9 +3,9 @@
 import json
 import codecs
 import os
+import logging
 from datetime import datetime
 import pymongo
-from scrapy import log
 from pymongo import MongoClient
 import ConfigParser
 from .items import User, Thread
@@ -24,7 +24,7 @@ class JsonWithEncodingPipeline(object):
             self.client = MongoClient()
             self.db = self.client.bitdb
         except:
-            log.msg('Start Mongod Fail', level=log.ERROR)
+            logging.error('Start Mongod Fail')
             raise Exception('Start Mongod Fail')
         self.stats = spider.crawler.stats
         self.stats.set_value('saveUserNum', 0)
@@ -103,4 +103,4 @@ class JsonWithEncodingPipeline(object):
             self.threadfile.close()
             self.client.close()
         except:
-            log.msg('pipeline file close fail')
+            logging.info('pipeline file close fail')

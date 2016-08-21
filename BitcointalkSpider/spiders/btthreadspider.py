@@ -2,14 +2,14 @@ from datetime import datetime
 import ConfigParser
 import re
 import scrapy
-from scrapy.spider import Spider
-from scrapy.contrib.linkextractors import LinkExtractor
-from scrapy import log
+from scrapy.spiders import Spider
+from scrapy.linkextractors import LinkExtractor
 from scrapy.http import Request
 from ..items import User, Thread
 from BitcointalkSpider.util import incAttr
+import logging
 
-class btthreadspider(scrapy.spider.Spider):
+class btthreadspider(scrapy.spiders.Spider):
 
     name = "btthreadspider"
     allowed_domains = ["bitcointalk.org"]
@@ -48,7 +48,7 @@ class btthreadspider(scrapy.spider.Spider):
                 time = filter(lambda x : len(x.strip()), board.xpath('(./td)[4]//text()').extract())
                 if time == []:
                     incAttr(self.stats, 'ignoreBoardNum')
-                    log.msg('The board %s do not have time.' %url, level=log.ERROR)
+                    logging.error('The board %s do not have time.' %url)
                     continue
                 time = self.timeFormat(time[-1].strip())
                 if self.isNewTime(time):
@@ -70,7 +70,7 @@ class btthreadspider(scrapy.spider.Spider):
                     time = filter(lambda x : len(x.strip()), board.xpath('(./td)[4]//text()').extract())
                     if not time:
                         incAttr(self.stats, 'ignoreSubboardNum')
-                        log.msg('The board %s do not have time.' %url, level=log.ERROR)
+                        logging.error('The board %s do not have time.' %url)
                         continue
                     time = self.timeFormat(time[-1].strip())
                     if self.isNewTime(time):
@@ -115,7 +115,7 @@ class btthreadspider(scrapy.spider.Spider):
                     time = datetime.strptime(time.strip(), "%B %d, %Y, %I:%M:%S %p")
             return time
         except:
-            log.msg('timeFormat fail.', level = log.ERROR)
+            logging.error('timeFormat fail.')
             return None
 
     def genmax(self, response):
